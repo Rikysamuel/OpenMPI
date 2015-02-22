@@ -1,8 +1,8 @@
 #include<stdio.h>
 #include<mpi.h>
 
-#define ROW 256
-#define COL 256
+#define ROW 128
+#define COL 128
 #define MASTER_TO_SLAVE_TAG 1
 #define SLAVE_TO_MASTER_TAG 4
 
@@ -39,7 +39,6 @@ void readFile(char* filename)
                 }
             }
         } else{
-            // printf("masuk\n");
             if(j<COL){
                 mat_b[k][j] = num;
                 j++;
@@ -82,6 +81,42 @@ void print()
     printf("\n\n");
 }
 
+void printSerial(){
+     //matrix_a
+    for (i = 0; i < ROW; i++) {
+        printf("\n");
+        for (j = 0; j < COL; j++)
+            printf("%8.2f  ", mat_a[i][j]);
+    }
+    printf("\n\n\n");
+
+    //matrix_b
+    for (i = 0; i < ROW; i++) {
+        printf("\n");
+        for (j = 0; j < COL; j++)
+            printf("%8.2f  ", mat_b[i][j]);
+    }
+
+    //matrix_result
+    printf("\n\n\n");
+    for (i = 0; i < ROW; i++) {
+        printf("\n");
+        for (j = 0; j < COL; j++)
+            printf("%8.2f  ", mat_res[i][j]);
+    }
+    printf("\n\n");
+}
+
+// Multiply matrix - serial
+void multiplyMatrix()
+{
+  int i, j, k;
+  for(i=0;i<ROW;i++)
+    for(j=0;j<COL;j++)
+        for(k=0,mat_res[i][j]=0; k<ROW; k++)
+            mat_res[i][j] += mat_a[i][k] * mat_b[k][j];
+}
+
 int main(int argc, char *argv[])
 {
     // initialization
@@ -90,7 +125,7 @@ int main(int argc, char *argv[])
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     
     if (rank == 0) {
-        readFile("4.txt");
+        readFile("3.txt");
         start_time = MPI_Wtime();
         
         if(size==1){
@@ -147,6 +182,15 @@ int main(int argc, char *argv[])
         printf("\nRunning Time = %f\n\n", end_time - start_time);
         // print();
     }
+    
+    if (size==1){
+        start_time = MPI_Wtime();
+        multiplyMatrix();
+        end_time = MPI_Wtime();
+        // printSerial();
+        printf("\nSerial Running Time = %f\n\n", end_time - start_time);
+    }
+    
     MPI_Finalize();
     return 0;
 }
