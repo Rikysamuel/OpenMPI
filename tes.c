@@ -1,5 +1,5 @@
-#define ROW 4
-#define COL 4
+#define ROW 64
+#define COL 64
 #define UNDEFINED -999
 
 #include<stdio.h>
@@ -66,7 +66,7 @@ int main()
 {
     init(matrix);
     init(matrix2);
-    readFile((char*)"1.txt");
+    readFile((char*)"2.txt");
     printMatrix(matrix);
     printf("\n");
     printMatrix(matrix2);

@@ -1,5 +1,5 @@
-#define ROW 4
-#define COL 4
+#define ROW 1024
+#define COL 1024
 
 #include <stdio.h>
 
